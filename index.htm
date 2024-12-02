@@ -1,0 +1,401 @@
+<!-- Calculator Container -->
+<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 20px auto; background: #2F4F4F; padding: 32px; border-radius: 20px; color: #F5F1EA; box-sizing: border-box;">
+    <!-- Header Section -->
+    <div style="text-align: center; margin-bottom: 32px;">
+        <h2 style="color: #F5F1EA; font-size: 32px; margin: 0 0 16px 0; padding: 0; font-weight: 600;">XSITE ©RetireWise</h2>
+        <div style="color: #F5F1EA; font-size: 16px; line-height: 1.6; margin: 0 auto; padding: 0 16px;">
+            Our ©RetireWise Calculator helps you determine exactly how much you need to invest in multifamily properties each year to reach your retirement goals. Simply enter the required details and we'll show you the annual multifamily investments needed to get there.
+        </div>
+    </div>
+
+    <!-- Calculator Form -->
+    <form id="calculatorForm" style="margin: 32px 0; padding: 0;">
+        <!-- Start Year -->
+        <div style="margin-bottom: 24px;">
+            <label style="display: block; margin-bottom: 8px; color: #F5F1EA; font-size: 16px; font-weight: 500;">Start Year</label>
+            <input type="number" id="startYear" disabled 
+                style="width: 100%; 
+                       padding: 12px 16px; 
+                       border: 2px solid #F5F1EA; 
+                       border-radius: 8px; 
+                       background: rgba(255, 255, 255, 0.1); 
+                       color: #F5F1EA; 
+                       font-size: 16px; 
+                       box-sizing: border-box;
+                       margin: 0;">
+        </div>
+
+        <!-- Retirement Year -->
+        <div style="margin-bottom: 24px;">
+            <label style="display: block; margin-bottom: 8px; color: #F5F1EA; font-size: 16px; font-weight: 500;">Retirement Year</label>
+            <input type="range" id="retirementYear" 
+                style="width: 100%; 
+                       height: 8px; 
+                       background: #F5F1EA; 
+                       border-radius: 4px; 
+                       -webkit-appearance: none;
+                       margin: 0;">
+            <div id="retirementYearValue" 
+                style="text-align: center; 
+                       color: #F5F1EA; 
+                       margin-top: 8px; 
+                       font-size: 14px;">
+            </div>
+        </div>
+
+        <!-- Target Amount -->
+        <div style="margin-bottom: 24px;">
+            <label style="display: block; margin-bottom: 8px; color: #F5F1EA; font-size: 16px; font-weight: 500;">Target Amount at Retirement ($)</label>
+            <input type="number" id="targetAmount" required min="0" 
+                style="width: 100%; 
+                       padding: 12px 16px; 
+                       border: 2px solid #F5F1EA; 
+                       border-radius: 8px; 
+                       background: rgba(255, 255, 255, 0.1); 
+                       color: #F5F1EA; 
+                       font-size: 16px; 
+                       box-sizing: border-box;
+                       margin: 0;">
+        </div>
+
+        <!-- Expected Annual Return -->
+        <div style="margin-bottom: 24px;">
+            <label style="display: block; margin-bottom: 8px; color: #F5F1EA; font-size: 16px; font-weight: 500;">Expected Annual Return (%)</label>
+            <input type="number" id="returnRate" required min="0" max="100" value="15" 
+                style="width: 100%; 
+                       padding: 12px 16px; 
+                       border: 2px solid #F5F1EA; 
+                       border-radius: 8px; 
+                       background: rgba(255, 255, 255, 0.1); 
+                       color: #F5F1EA; 
+                       font-size: 16px; 
+                       box-sizing: border-box;
+                       margin: 0;">
+        </div>
+
+        <!-- Expected Inflation Rate -->
+        <div style="margin-bottom: 24px;">
+            <label style="display: block; margin-bottom: 8px; color: #F5F1EA; font-size: 16px; font-weight: 500;">Expected Inflation Rate (%)</label>
+            <input type="number" id="inflationRate" step="0.1" required min="0" max="100" value="2.5" 
+                style="width: 100%; 
+                       padding: 12px 16px; 
+                       border: 2px solid #F5F1EA; 
+                       border-radius: 8px; 
+                       background: rgba(255, 255, 255, 0.1); 
+                       color: #F5F1EA; 
+                       font-size: 16px; 
+                       box-sizing: border-box;
+                       margin: 0;">
+        </div>
+
+        <!-- Calculate Button -->
+        <button type="submit" 
+            style="width: 100%; 
+                   padding: 16px; 
+                   background: #BFB1A4; 
+                   color: #2F4F4F; 
+                   border: none; 
+                   border-radius: 8px; 
+                   font-size: 16px; 
+                   font-weight: 600; 
+                   cursor: pointer;
+                   margin: 0;">
+            Calculate Investment Goal
+        </button>
+    </form>
+
+    <!-- Results Section -->
+    <div id="result" 
+        style="display: none; 
+               margin-top: 32px; 
+               padding: 24px; 
+               background: #5D4B3C; 
+               border-radius: 12px; 
+               text-align: center;">
+        <h2 style="color: #F5F1EA; margin: 0 0 16px 0; font-size: 24px;">Required Annual Investment</h2>
+        <p id="resultValue" style="color: #F5F1EA; font-size: 28px; font-weight: 600; margin: 0;">$0</p>
+    </div>
+
+    <!-- Chart Section -->
+    <div id="chartContainer" 
+        style="display: none; 
+               margin-top: 32px; 
+               padding: 24px; 
+               background: #5D4B3C; 
+               border-radius: 12px;">
+        <h3 style="color: #F5F1EA; margin: 0 0 16px 0; text-align: center; font-size: 20px;">Investment Growth Over Time</h3>
+        <canvas id="growthChart"></canvas>
+    </div>
+
+    <!-- Email Report Button -->
+    <button id="emailButton"
+        style="display: none;
+               width: 100%; 
+               padding: 16px; 
+               background: #BFB1A4; 
+               color: #2F4F4F; 
+               border: none; 
+               border-radius: 8px; 
+               font-size: 16px; 
+               font-weight: 600; 
+               cursor: pointer;
+               margin: 32px 0 0 0;
+               animation: pulse 2s infinite;">
+        Email Report to Myself
+    </button>
+
+    <!-- Modal for Personal Information -->
+    <div id="modal" style="display: none; 
+                           position: fixed; 
+                           top: 0; 
+                           left: 0; 
+                           width: 100%; 
+                           height: 100%; 
+                           background: rgba(0, 0, 0, 0.5); 
+                           align-items: center; 
+                           justify-content: center;">
+        <div style="background: #2F4F4F; 
+                    padding: 24px; 
+                    border-radius: 12px; 
+                    max-width: 400px; 
+                    width: 90%; 
+                    margin: auto; 
+                    color: #F5F1EA;">
+            <h3 style="margin-top: 0;">Enter Your Details</h3>
+            <form id="infoForm">
+                <div style="margin-bottom: 16px;">
+                    <label>First Name</label>
+                    <input type="text" id="firstName" required 
+                        style="width: 100%; padding: 8px; margin-top: 4px; border-radius: 4px; border: 1px solid #F5F1EA; background: #5D4B3C; color: #F5F1EA;">
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <label>Last Name</label>
+                    <input type="text" id="lastName" required 
+                        style="width: 100%; padding: 8px; margin-top: 4px; border-radius: 4px; border: 1px solid #F5F1EA; background: #5D4B3C; color: #F5F1EA;">
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <label>Phone Number</label>
+                    <input type="tel" id="phoneNumber" required 
+                        style="width: 100%; padding: 8px; margin-top: 4px; border-radius: 4px; border: 1px solid #F5F1EA; background: #5D4B3C; color: #F5F1EA;">
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <label>Email Address</label>
+                    <input type="email" id="userEmail" required 
+                        style="width: 100%; padding: 8px; margin-top: 4px; border-radius: 4px; border: 1px solid #F5F1EA; background: #5D4B3C; color: #F5F1EA;">
+                </div>
+                <button type="submit" 
+                    style="width: 100%; padding: 12px; background: #BFB1A4; color: #2F4F4F; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;">
+                    Send Report
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Copyright Notice -->
+    <div style="margin-top: 32px; 
+                text-align: center; 
+                color: #F5F1EA; 
+                font-size: 14px; 
+                opacity: 0.8; 
+                padding: 16px 0 0 0; 
+                border-top: 1px solid rgba(245, 241, 234, 0.1);">
+        ©RetireWise is a registered trademark and copyright of XSITE Capital Investment LLC. All rights reserved.
+        This calculator and its contents are protected by U.S. and international copyright laws.
+    </div>
+</div>
+
+<!-- Pulsating Button Animation -->
+<style>
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(191, 177, 164, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(191, 177, 164, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(191, 177, 164, 0);
+    }
+}
+</style>
+
+<!-- Include Chart.js and EmailJS SDK -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@2/dist/email.min.js"></script>
+
+<script type="text/javascript">
+   // Initialize EmailJS with your user ID
+   (function(){
+      emailjs.init('g-9fRg1rCFYyoSP3a'); // Replace 'YOUR_USER_ID' with your actual EmailJS user ID
+   })();
+</script>
+
+<script>
+const currentYear = new Date().getFullYear();
+const startYearInput = document.getElementById('startYear');
+const retirementYearInput = document.getElementById('retirementYear');
+const retirementYearValue = document.getElementById('retirementYearValue');
+
+startYearInput.value = currentYear;
+retirementYearInput.min = currentYear + 1;
+retirementYearInput.max = currentYear + 40;
+retirementYearInput.value = currentYear + 20;
+retirementYearValue.textContent = `${retirementYearInput.value} (${retirementYearInput.value - currentYear} years)`;
+
+retirementYearInput.addEventListener('input', function() {
+    retirementYearValue.textContent = `${this.value} (${this.value - currentYear} years)`;
+});
+
+let growthChart = null;
+
+document.getElementById('calculatorForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const startYear = parseInt(startYearInput.value);
+    const retirementYear = parseInt(retirementYearInput.value);
+    const targetAmount = parseFloat(document.getElementById('targetAmount').value);
+    const returnRate = parseFloat(document.getElementById('returnRate').value) / 100;
+    const inflationRate = parseFloat(document.getElementById('inflationRate').value) / 100;
+
+    const years = retirementYear - startYear;
+    const inflationAdjustedTarget = targetAmount * Math.pow(1 + inflationRate, years);
+    const numerator = inflationAdjustedTarget * returnRate;
+    const denominator = Math.pow(1 + returnRate, years) - 1;
+    const annualInvestment = numerator / denominator;
+
+    const labels = [];
+    const values = [];
+    let currentAmount = 0;
+
+    for (let year = 0; year <= years; year++) {
+        labels.push(startYear + year);
+        currentAmount = (currentAmount * (1 + returnRate)) + annualInvestment;
+        values.push(currentAmount);
+    }
+
+    const resultElement = document.getElementById('result');
+    const resultValueElement = document.getElementById('resultValue');
+    resultValueElement.textContent = `$${Math.round(annualInvestment).toLocaleString()}`;
+    resultElement.style.display = 'block';
+
+    const chartContainer = document.getElementById('chartContainer');
+    chartContainer.style.display = 'block';
+
+    if (growthChart) {
+        growthChart.destroy();
+    }
+
+    const ctx = document.getElementById('growthChart').getContext('2d');
+    growthChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Portfolio Value',
+                data: values,
+                borderColor: '#BFB1A4',
+                backgroundColor: 'rgba(191, 177, 164, 0.1)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `$${context.raw.toLocaleString(undefined, {
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 0
+                            })}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return '$' + (value / 1000000).toFixed(1) + 'M';
+                        },
+                        color: '#F5F1EA'
+                    },
+                    grid: {
+                        color: 'rgba(245, 241, 234, 0.1)'
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: '#F5F1EA'
+                    },
+                    grid: {
+                        color: 'rgba(245, 241, 234, 0.1)'
+                    }
+                }
+            }
+        }
+    });
+
+    // Show the Email Report button
+    document.getElementById('emailButton').style.display = 'block';
+});
+
+document.getElementById('emailButton').addEventListener('click', function() {
+    // Show the modal
+    document.getElementById('modal').style.display = 'flex';
+});
+
+document.getElementById('infoForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Collect user details
+    const firstName = document.getElementById('firstName').value.trim();
+    const lastName = document.getElementById('lastName').value.trim();
+    const phoneNumber = document.getElementById('phoneNumber').value.trim();
+    const userEmail = document.getElementById('userEmail').value.trim();
+
+    // Basic validation (additional validation can be added)
+    if (!firstName || !lastName || !phoneNumber || !userEmail) {
+        alert('Please fill in all required fields.');
+        return;
+    }
+
+    const startYear = document.getElementById('startYear').value;
+    const retirementYear = document.getElementById('retirementYear').value;
+    const targetAmount = document.getElementById('targetAmount').value;
+    const returnRate = document.getElementById('returnRate').value;
+    const inflationRate = document.getElementById('inflationRate').value;
+    const requiredInvestment = document.getElementById('resultValue').textContent;
+
+    // Prepare the email parameters
+    const templateParams = {
+        first_name: firstName,
+        last_name: lastName,
+        phone_number: phoneNumber,
+        user_email: userEmail,
+        start_year: startYear,
+        retirement_year: retirementYear,
+        target_amount: targetAmount,
+        return_rate: returnRate,
+        inflation_rate: inflationRate,
+        required_annual_investment: requiredInvestment
+    };
+
+    // Send the email using EmailJS
+    emailjs.send('service_ymsie99', 'retirewise', templateParams)
+        .then(function(response) {
+            alert('Report emailed successfully!');
+            // Hide the modal
+            document.getElementById('modal').style.display = 'none';
+        }, function(error) {
+            alert('Failed to send email. Please try again.');
+            console.error('EmailJS error:', error);
+        });
+});
+</script>
